@@ -10,4 +10,7 @@ mkdir build && cd build;
 make -f ..\Makefile
 ```
 # usage
-USAGE: c-valida-cpf [CPFs...|Files...]
+```bash
+chmod +x c-valida-cpf
+./c-valida-cpf [CPFs...|Files...]
+```

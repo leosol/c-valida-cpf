@@ -1,5 +1,5 @@
 # c-valida-cpf
-CPF single or multiple validation
+CPF and CNPJ single or multiple validation
 
 Thanks to @eduardoedson for Validar CPF.c
 

@@ -6,6 +6,8 @@
 #include <string.h>
 
 int validarCPF(char *cpf);
+int validarCNPJ(char *cnpj);
+
 
 int main(int argc, char **argv) {
 
@@ -28,16 +30,30 @@ int main(int argc, char **argv) {
 				char trimmed_line[12];
 				if(str_len>10) {
 					strncpy(trimmed_line, line, 11);
+					trimmed_line[11] = '\0';
 					int res = validarCPF(trimmed_line);
 					int new_len = strlen(trimmed_line);
-					//printf("Trimmed line: %s - %d\n", trimmed_line, new_len);
+					//printf("Trimmed CPF: %s - %d\n", trimmed_line, new_len);
 					if (res) {
 						printf("Valid CPF: %s\n", trimmed_line);
+						continue;
 					} else {
 						//printf("Invalid CPF: %s\n", trimmed_line);
 					}
-				} else {
-					//printf("Line too short %s\n", line);
+				}
+				char trimmed_line2[15];
+				if(str_len>13) {
+					strncpy(trimmed_line2, line, 14);
+					trimmed_line2[14] = '\0';
+					int res = validarCNPJ(trimmed_line2);
+					int new_len = strlen(trimmed_line2);
+					//printf("Trimmed CNPJ: %s - %d\n", trimmed_line2, new_len);
+					if (res) {
+						printf("Valid CNPJ: %s\n", trimmed_line2);
+						continue;
+					} else {
+						//printf("Invalid CNPJ: %s\n", trimmed_line2);
+					}
 				}
 			}
 			fclose(ptr);
@@ -48,7 +64,13 @@ int main(int argc, char **argv) {
 			if(res){
 				printf("Valid CPF: %s\n", test_str);
 			} else {
-				//printf("Invalid CPF: %s\n", test_str);
+				printf("Invalid CPF: %s\n", test_str);
+			}
+			res = validarCNPJ(test_str);
+			if (res) {
+				printf("Valid CNPJ: %s\n", test_str);
+			}else{
+				printf("Invalid CNPJ: %s\n", test_str);
 			}
 		}
 
@@ -102,3 +124,59 @@ int validarCPF(char *cpf) {
 	}
 	return 1;
 }
+
+
+
+
+int validarCNPJ(char *cnpj) {
+	int i, j, digito1 = 0, digito2 = 0;
+	if (strlen(cnpj) != 14)
+		return 0;
+	else if ((strcmp(cnpj, "00000000000000") == 0)
+			|| (strcmp(cnpj, "11111111111111") == 0)
+			|| (strcmp(cnpj, "22222222222222") == 0)
+			|| (strcmp(cnpj, "33333333333333") == 0)
+			|| (strcmp(cnpj, "44444444444444") == 0)
+			|| (strcmp(cnpj, "55555555555555") == 0)
+			|| (strcmp(cnpj, "66666666666666") == 0)
+			|| (strcmp(cnpj, "77777777777777") == 0)
+			|| (strcmp(cnpj, "88888888888888") == 0)
+			|| (strcmp(cnpj, "99999999999999") == 0))
+		return 0; ///se o CNPJ tiver todos os números iguais ele é inválido.
+	else {
+		int tamanho = strlen(cnpj) - 2;
+		int soma = 0;
+    		int pos = tamanho - 7;
+		for (i = tamanho; i >= 1; i--) {
+			soma += (cnpj[tamanho-i]-48)*pos--;
+		      	if (pos < 2){
+			    	pos = 9;
+			}
+		}
+		int resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+		if (resultado != (cnpj[12]-48)){
+			return 0;
+		}
+
+		tamanho = tamanho + 1;
+		soma = 0;
+		pos = tamanho - 7;
+		for (i = tamanho; i >= 1; i--) {
+			soma += (cnpj[tamanho-i]-48) * pos--;
+		      	if (pos < 2){
+			    pos = 9;
+			}
+		}
+		resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
+		if (resultado != (cnpj[13]-48)){
+			return 0;
+		}
+		   
+		return 1;
+
+	}
+	return 0;
+}
+
+
+
